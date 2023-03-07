@@ -19,7 +19,7 @@ let testTree = new Tree(arr2);
 testTree.buildTree();
 prettyPrint(testTree.returnNode());
 // testTree.insert(15);
-testTree.delete(4);
+testTree.delete(12);
 prettyPrint(testTree.returnNode());
 // testTree.log();
 
@@ -129,10 +129,23 @@ function Tree(arr) {
                     let childNode = tree.right.right; // case 2: node has 1 child
                     tree.right = childNode;
                 } else { // case 3: node has 2 child
-                    let leftChild = tree.right.left;
-                    let rightChild = tree.right.right;
-                    tree.right = leftChild;
-                    tree.right.right = rightChild;
+                    // go right subtree
+                    // then go left subtree of right subtree until no children
+                    let nodeBefore = tree.right;
+                    let nextBiggest = tree.right.right;
+                    let extraChild = false;
+                    while (nextBiggest.left != null) {
+                        nodeBefore = nextBiggest;
+                        nextBiggest = nextBiggest.left;
+                        console.log(nextBiggest);
+                        extraChild = true;
+                    }
+                    if (extraChild == true) {
+                        nodeBefore.left = null; // delete the leaf from left subtree of right subtree
+                    } else {
+                        nodeBefore.right = null;
+                    }
+                    tree.right.value = nextBiggest.value;
                 }
             } else {
                 return deleteNode(value, tree.right);
@@ -148,16 +161,29 @@ function Tree(arr) {
                     let childNode = tree.left.right; // case 2: node has 1 child
                     tree.right = childNode;
                 } else { // case 3: node has 2 children
-                    let leftChild = tree.left.left;
-                    let rightChild = tree.left.right;
-                    tree.left = leftChild;
-                    tree.left.right = rightChild;
+                    // go right subtree
+                    // then go left subtree of right subtree until no children
+                    // find the one node that is just bigger than the removed node
+                    let nodeBefore = tree.left;
+                    let nextBiggest = tree.left.right;
+                    let extraChild = false;
+                    while (nextBiggest.left != null) {
+                        nodeBefore = nextBiggest;
+                        nextBiggest = nextBiggest.left;
+                        console.log(nextBiggest);
+                        extraChild = true;
+                    }
+                    if (extraChild == true) {
+                        nodeBefore.left = null; // delete the leaf from left subtree of right subtree
+                    } else {
+                        nodeBefore.right = null;
+                    }
+                    tree.left.value = nextBiggest.value;
                 }
             } else {
                 return deleteNode(value, tree.left);
             }
         }
-
     }
 
     this.find = (value) => {
