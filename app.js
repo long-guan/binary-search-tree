@@ -18,9 +18,10 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 let testTree = new Tree(arr2);
 testTree.buildTree();
 prettyPrint(testTree.returnNode());
+let nodetest = testTree.find(5);
+console.log(nodetest);
 // testTree.insert(15);
-testTree.delete(12);
-prettyPrint(testTree.returnNode());
+// testTree.delete(1);
 // testTree.log();
 
 function Node(value, left, right) {
@@ -111,14 +112,29 @@ function Tree(arr) {
         }
     }
 
+    // delete node with given value
     this.delete = (value) => {
         deleteNode(value, tree.root);
-        console.log('function delete ran');
     }
 
     function deleteNode(value, tree) {
-        // case 3: node has 2 children
-        if (value > tree.value) { // go right subtree
+        if (value == tree.value) { // value is found at root
+            let nodeBefore = tree.right;
+            let nextBiggest = tree.right.left;
+            let extraChild = false;
+            while (nextBiggest.left != null) {
+                nodeBefore = nextBiggest;
+                nextBiggest = nextBiggest.left;
+                console.log(nextBiggest);
+                extraChild = true;
+            }
+            if (extraChild == true) {
+                nodeBefore.left = null; // delete the leaf from left subtree of right subtree
+            } else {
+                nodeBefore.right = null;
+            }
+            tree.value = nextBiggest.value;
+        } else if (value > tree.value) { // go right subtree
             if (value == tree.right.value) {
                 if (tree.right.left == null && tree.right.right == null) {
                     tree.right = null; // case 1: node has no children
@@ -186,8 +202,29 @@ function Tree(arr) {
         }
     }
 
+    //finds node with given value
     this.find = (value) => {
-        // accepts value and returns node with given value
+        return findNode(value, tree.root);
+    }
+
+    function findNode(value, tree) {
+        if (value == tree.value) {
+            console.log(tree);
+            // return new Node(tree.value, tree.left, tree.right);
+            return tree;
+        } else if (value > tree.value) {
+            if (tree.right != null) {
+                return findNode(value, tree.right);
+            } else {
+                return 'Node does not exist';
+            }
+        } else if (value < tree.value) {
+            if (tree.left != null) {
+                return findNode(value, tree.left);
+            } else {
+                return 'Node does not exist';
+            }
+        }
     }
 
     this.log = () => {
