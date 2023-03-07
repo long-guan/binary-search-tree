@@ -2,7 +2,7 @@ import {mergeSort} from './mergeSort.js';
 import {removeDup} from './removeDup.js';
 
 let arr1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 300];
-let arr2 = [1, 3, 4, 6, 7, 8, 10, 13, 14];
+let arr2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 // prints binary search tree in the console
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -17,7 +17,9 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 let testTree = new Tree(arr2);
 testTree.buildTree();
-testTree.insert(11);
+prettyPrint(testTree.returnNode());
+// testTree.insert(15);
+testTree.delete(4);
 prettyPrint(testTree.returnNode());
 // testTree.log();
 
@@ -89,27 +91,72 @@ function Tree(arr) {
         if (value > tree.value) { // go right subtree
             if (tree.right == null) { // null means bottom of tree
                 tree.right = new Node(value, null, null);
-                console.log('right');
-                console.log(tree);
+                // console.log('right');
+                // console.log(tree);
             } else {
                 let pointer = tree.right;
-                console.log('right');
+                // console.log('right');
                 return insertNode(value, pointer);
             }
         } else { // value < pointer go left subtree
             if (tree.left == null) { // null means bottom of tree
                 tree.left = new Node(value, null, null);
-                console.log('left');
-                console.log(tree);
+                // console.log('left');
+                // console.log(tree);
             } else {
                 let pointer = tree.left;
-                console.log('left');
+                // console.log('left');
                 return insertNode(value, pointer);
             }
         }
     }
 
-    this.delete = () => {
+    this.delete = (value) => {
+        deleteNode(value, tree.root);
+        console.log('function delete ran');
+    }
+
+    function deleteNode(value, tree) {
+        // case 3: node has 2 children
+        if (value > tree.value) { // go right subtree
+            if (value == tree.right.value) {
+                if (tree.right.left == null && tree.right.right == null) {
+                    tree.right = null; // case 1: node has no children
+                } else if (tree.right.left != null && tree.right.right == null) {
+                    let childNode = tree.right.left;
+                    tree.right = childNode; // case 2: node has 1 child
+                } else if (tree.right.left == null && tree.right.right != null) {
+                    let childNode = tree.right.right; // case 2: node has 1 child
+                    tree.right = childNode;
+                } else { // case 3: node has 2 child
+                    let leftChild = tree.right.left;
+                    let rightChild = tree.right.right;
+                    tree.right = leftChild;
+                    tree.right.right = rightChild;
+                }
+            } else {
+                return deleteNode(value, tree.right);
+            }
+        } else if (value < tree.value) { // go left subtree
+            if (value == tree.left.value) {
+                if (tree.left.left == null && tree.left.right == null) {
+                    tree.left = null; // case 1: node has no children
+                } else if (tree.left.left != null && tree.left.right == null) {
+                    let childNode = tree.left.left;
+                    tree.left = childNode; // case 2: node has 1 child
+                } else if (tree.left.left == null && tree.left.right != null) {
+                    let childNode = tree.left.right; // case 2: node has 1 child
+                    tree.right = childNode;
+                } else { // case 3: node has 2 children
+                    let leftChild = tree.left.left;
+                    let rightChild = tree.left.right;
+                    tree.left = leftChild;
+                    tree.left.right = rightChild;
+                }
+            } else {
+                return deleteNode(value, tree.left);
+            }
+        }
 
     }
 
