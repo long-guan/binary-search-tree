@@ -230,10 +230,27 @@ function Tree(arr) {
 
     // traverses the tree in breadth-first level order and provide each node to provided function
     this.levelOrder = (func) => {
-        func(traverse(tree.root));
+        func(traverseRecur([tree.root]));
     }
 
-    function traverse(tree) {
+    // using recursion to print level order binary search tree
+    function traverseRecur(queue) {
+        if (queue.length == 0) {
+            console.log('ran');
+            return [];
+        }
+        if (queue[0].left != null) {
+            queue.push(queue[0].left);
+        }
+        if (queue[0].right != null) {
+            queue.push(queue[0].right);
+        }
+        let dequeue = queue.shift();
+        return [dequeue.value].concat(traverseRecur(queue));
+    }
+
+    // using iteration to print level order binary search tree
+    function traverseIt(tree) {
         let queue = [];
         let arr = [];
         if (tree.value == null) {
