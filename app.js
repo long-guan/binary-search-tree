@@ -18,11 +18,12 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 let testTree = new Tree(arr2);
 testTree.buildTree();
 prettyPrint(testTree.returnNode());
-let nodetest = testTree.find(5);
-console.log(nodetest);
+// let nodetest = testTree.find(5);
+// console.log(nodetest);
 // testTree.insert(15);
 // testTree.delete(1);
 // testTree.log();
+testTree.levelOrder(print);
 
 function Node(value, left, right) {
     this.value = value,
@@ -227,10 +228,55 @@ function Tree(arr) {
         }
     }
 
+    // traverses the tree in breadth-first level order and provide each node to provided function
+    this.levelOrder = (func) => {
+        func(traverse(tree.root));
+    }
+
+    function traverse(tree) {
+        let queue = [];
+        let arr = [];
+        if (tree.value == null) {
+            return null;
+        } else {
+            queue.push(tree); // add the root node to queue
+        }
+        while (queue.length != 0) {
+            if (queue[0].left != null) {
+                queue.push(queue[0].left); // add left child of node to queue if it exists
+            }
+            if (queue[0].right != null) {
+                queue.push(queue[0].right); // add right child of node to queue if it exists
+            }
+            let dequeue = queue.shift();
+            arr.push(dequeue.value);
+        }
+        return arr;
+    }
+
+    function traverseLeftToRight(tree) {
+        if (tree.left != null && tree.right != null) {
+            console.log('2 child');
+            return [tree.value].concat(traverse(tree.left), traverse(tree.right));
+        } else if (tree.left != null) {
+            console.log('left child');
+            return [tree.value].concat(traverse(tree.left));
+        } else if (tree.right != null) {
+            console.log('right child');
+            return [tree.value].concat(traverse(tree.right));
+        } else { // no more child
+            return tree.value;
+        }
+    }
+
     this.log = () => {
         console.log('arrSort = ')
         console.log(arrSort);
         console.log('tree = ');
         console.log(tree);
     }
+}
+
+function print(node) {
+    console.log(node);
 }
