@@ -18,6 +18,11 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 let testTree = new Tree(arr2);
 testTree.buildTree();
+testTree.insert(100);
+testTree.insert(101);
+testTree.insert(102);
+prettyPrint(testTree.returnNode());
+testTree.rebalance();
 prettyPrint(testTree.returnNode());
 // let nodetest = testTree.find(5);
 // console.log(nodetest);
@@ -28,7 +33,11 @@ prettyPrint(testTree.returnNode());
 // testTree.inOrder(print);
 // testTree.preOrder(print);
 // testTree.postOrder(print);
-console.log(testTree.height(testTree.returnNode()));
+// console.log(testTree.height(testTree.returnNode()));
+// console.log(testTree.depth(testTree.returnNode()));
+
+testTree.isBalanced();
+
 
 function Node(value, left, right) {
     this.value = value,
@@ -94,7 +103,6 @@ function Tree(arr) {
     }
 
     function insertNode (value, tree) {
-        console.log(tree);
         if (value > tree.value) { // go right subtree
             if (tree.right == null) { // null means bottom of tree
                 tree.right = new Node(value, null, null);
@@ -293,10 +301,10 @@ function Tree(arr) {
     function recurInOrder(tree) {
         if (tree.left != null && tree.right != null) {
             return [].concat(recurInOrder(tree.left),[tree.value],recurInOrder(tree.right));
-        } else if (tree.left != null && tree.right == null) {
-            return [tree.left.value, tree.value];
-        } else if (tree.left == null && tree.right != null) {
-            return [tree.right.value, tree.value];
+        } else if (tree.left != null) {
+            return [tree.left.value, tree.value].concat(recurInOrder(tree.left));
+        } else if (tree.right != null) {
+            return [tree.value].concat(recurInOrder(tree.right));
         } else {
             return tree.value;
         }
@@ -338,6 +346,7 @@ function Tree(arr) {
         }
     }
 
+    // returns height of node from the longest path to a leaf node
     this.height = (node) => {
         if (node.left != null && node.right != null) {
             if (this.height(node.left) > this.height(node.right)) {
@@ -354,6 +363,37 @@ function Tree(arr) {
         }
     }
 
+    this.depth = (node) => {
+       return findDepth(node,tree.root);
+    }
+
+    function findDepth(node, tree) {
+        if (node == tree) {
+            return 0;
+        } else if (node.value > tree.value) {
+            return 1 + findDepth(node, tree.right);
+        } else { // node.value < tree.value
+            return 1 + findDepth(node, tree.left);
+        }
+    }
+
+    // returns height of node from the longest path to a leaf node
+    this.isBalanced = () => {
+        if ((this.height(tree.root.left) - this.height(tree.root.right)) >= 2 || (this.height(tree.root.right) - this.height(tree.root.left)) >= 2) {
+            console.log('Tree is not balanced');
+            return false;
+        } else {
+            console.log('Tree is balanced');
+            return true;
+        }
+    }
+
+    this.rebalance = () => {
+        arrSort = recurInOrder(tree.root);
+        console.log(arrSort);
+        this.buildTree();
+    }
+
     this.log = () => {
         console.log('arrSort = ')
         console.log(arrSort);
@@ -365,3 +405,17 @@ function Tree(arr) {
 function print(node) {
     console.log(node);
 }
+
+// if (tree.left != null && tree.right != null) {
+//     if (this.height(tree.left) > this.height(tree.right)) {
+//         return 1 + this.height(tree.left);
+//     } else {
+//         return 1 + this.height(tree.right);
+//     }
+// } else if (tree.left != null) {
+//     return 1 + this.height(tree.left);
+// } else if (tree.right != null) {
+//     return 1 + this.height(tree.right);
+// } else {
+//     return 0;
+// }
