@@ -16,14 +16,13 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     }
 }
 
-let testTree = new Tree(arr2);
-testTree.buildTree();
-testTree.insert(100);
-testTree.insert(101);
-testTree.insert(102);
-prettyPrint(testTree.returnNode());
-testTree.rebalance();
-prettyPrint(testTree.returnNode());
+// let testTree = new Tree(arr2);
+// testTree.buildTree();
+// testTree.insert(100);
+// testTree.insert(101);
+// testTree.insert(102);
+// prettyPrint(testTree.returnNode());
+
 // let nodetest = testTree.find(5);
 // console.log(nodetest);
 // testTree.insert(15);
@@ -36,8 +35,39 @@ prettyPrint(testTree.returnNode());
 // console.log(testTree.height(testTree.returnNode()));
 // console.log(testTree.depth(testTree.returnNode()));
 
-testTree.isBalanced();
+// testTree.isBalanced();
+testBinary()
 
+function testBinary() {
+    let arr = createRandArr(10);
+    console.log(`random arr = ${arr}`);
+    let newTree = new Tree(arr);
+    newTree.buildTree();
+    prettyPrint(newTree.returnNode());
+    newTree.isBalanced();
+    newTree.preOrder(print);
+    newTree.postOrder(print);
+    newTree.inOrder(print);
+    newTree.insert(100);
+    newTree.insert(101);
+    newTree.insert(102);
+    prettyPrint(newTree.returnNode());
+    newTree.isBalanced();
+    newTree.rebalance();
+    newTree.isBalanced();
+    newTree.preOrder(print);
+    newTree.postOrder(print);
+    newTree.inOrder(print);
+    prettyPrint(newTree.returnNode());
+}
+
+function createRandArr(size) {
+    let arr = [];
+    for (let i = 0; i < size; i++) {
+       arr.push(Math.floor(Math.random() * 100));
+    }
+    return arr;
+}
 
 function Node(value, left, right) {
     this.value = value,
@@ -61,6 +91,7 @@ function Tree(arr) {
     // returns level-0 root node
     this.buildTree = () => {
         recurBuildTree(arrSort);
+        console.log(`arrSort = ${arrSort}`);
         console.log(tree);
         return tree.root;
     }
@@ -302,7 +333,7 @@ function Tree(arr) {
         if (tree.left != null && tree.right != null) {
             return [].concat(recurInOrder(tree.left),[tree.value],recurInOrder(tree.right));
         } else if (tree.left != null) {
-            return [tree.left.value, tree.value].concat(recurInOrder(tree.left));
+            return [recurInOrder(tree.left)].concat(tree.value);
         } else if (tree.right != null) {
             return [tree.value].concat(recurInOrder(tree.right));
         } else {
