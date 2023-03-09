@@ -3,6 +3,7 @@ import {removeDup} from './removeDup.js';
 
 let arr1 = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 300];
 let arr2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+let arr3 = [1, 2, 3, 4, 5, 6, 7, 8];
 
 // prints binary search tree in the console
 const prettyPrint = (node, prefix = '', isLeft = true) => {
@@ -26,7 +27,8 @@ prettyPrint(testTree.returnNode());
 // testTree.levelOrder(print);
 // testTree.inOrder(print);
 // testTree.preOrder(print);
-testTree.postOrder(print);
+// testTree.postOrder(print);
+console.log(testTree.height(testTree.returnNode()));
 
 function Node(value, left, right) {
     this.value = value,
@@ -333,6 +335,22 @@ function Tree(arr) {
             return [tree.right.value, tree.value];
         } else {
             return tree.value;
+        }
+    }
+
+    this.height = (node) => {
+        if (node.left != null && node.right != null) {
+            if (this.height(node.left) > this.height(node.right)) {
+                return 1 + this.height(node.left);
+            } else {
+                return 1 + this.height(node.right);
+            }
+        } else if (node.left != null) {
+            return 1 + this.height(node.left);
+        } else if (node.right != null) {
+            return 1 + this.height(node.right);
+        } else {
+            return 0;
         }
     }
 
