@@ -23,7 +23,10 @@ prettyPrint(testTree.returnNode());
 // testTree.insert(15);
 // testTree.delete(1);
 // testTree.log();
-testTree.levelOrder(print);
+// testTree.levelOrder(print);
+// testTree.inOrder(print);
+// testTree.preOrder(print);
+testTree.postOrder(print);
 
 function Node(value, left, right) {
     this.value = value,
@@ -271,17 +274,64 @@ function Tree(arr) {
         return arr;
     }
 
-    function traverseLeftToRight(tree) {
+    // returns nodes In Order (smallest to biggest)
+    // algorithm:
+    // initilization) visit left most node of left subtree
+    // 1) visit parent of left most node
+    // 2) if parent of left most node has right child, visit right child
+    // 3) visit parent of current node
+    // 4) vist left most node of right subtree
+    // 5) repeat
+    // 6) repeat for both left subtree and right subtree
+    this.inOrder = (func) => {
+        func(recurInOrder(tree.root));
+    }
+
+    // using recursion to find in order traversal
+    function recurInOrder(tree) {
         if (tree.left != null && tree.right != null) {
-            console.log('2 child');
-            return [tree.value].concat(traverse(tree.left), traverse(tree.right));
+            return [].concat(recurInOrder(tree.left),[tree.value],recurInOrder(tree.right));
+        } else if (tree.left != null && tree.right == null) {
+            return [tree.left.value, tree.value];
+        } else if (tree.left == null && tree.right != null) {
+            return [tree.right.value, tree.value];
+        } else {
+            return tree.value;
+        }
+    }
+
+    // 1) visit root
+    // 2) traverse left sub tree
+    // 2) traverse right sub tree
+    this.preOrder = (func) => {
+        func(recurPreOrder(tree.root));
+    }
+
+    function recurPreOrder(tree) {
+        if (tree.left != null && tree.right != null) {
+            return [tree.value].concat(recurPreOrder(tree.left), recurPreOrder(tree.right));
         } else if (tree.left != null) {
-            console.log('left child');
-            return [tree.value].concat(traverse(tree.left));
+            return [tree.value, tree.left.value];
         } else if (tree.right != null) {
-            console.log('right child');
-            return [tree.value].concat(traverse(tree.right));
-        } else { // no more child
+            return [tree.value, tree.right.value];
+        } else {
+            return tree.value;
+        }
+    }
+
+    // recursively return post order traversal of binary tree
+    this.postOrder = (func) => {
+        func(recurPostOrder(tree.root));
+    }
+
+    function recurPostOrder(tree) {
+        if (tree.left != null && tree.right != null) {
+            return [].concat(recurPostOrder(tree.left), recurPostOrder(tree.right), tree.value);
+        } else if (tree.left != null) {
+            return [tree.left.value, tree.value];
+        } else if (tree.right != null) {
+            return [tree.right.value, tree.value];
+        } else {
             return tree.value;
         }
     }
